@@ -121,18 +121,32 @@
       background-color: var(--white);
     }
 
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (min-width: 600px) {
+      .problem-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
     .quote-box {
       background-color: var(--sand);
       border-left: 6px solid var(--deep-ocean);
       padding: 1.5rem;
-      margin: 1.5rem 0;
       border-radius: 0 8px 8px 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
 
     .quote-box p {
-      font-style: italic;
-      font-size: 1.25rem;
-      color: var(--deep-ocean);
+      font-size: 1.125rem;
+      color: var(--text-dark);
       margin-bottom: 0;
     }
 
@@ -407,10 +421,17 @@
   <section class="problem-section">
     <div class="container">
       <h2>The Problem</h2>
-      <div class="quote-box">
-        <p>"The very last thing I ever wanted to do was treat Hawaii like a zoo. I know I’m a tourist. I was never trying to not be one, I just didn’t want to be ignorant that’s all."</p>
+      <p class="subhead" style="margin-bottom: 1rem;">Hard to find for travelers. Hard to grow for locals.</p>
+      
+      <div class="problem-grid">
+        <div class="quote-box">
+          <p><strong>For Mindful Travelers:</strong> Eco-conscious visitors to Hawaiʻi struggle to find authentic, vetted sustainable businesses, voluntourism workdays (Mālama Hawaiʻi projects), and zero-waste initiatives due to fragmented information, lack of centralized discovery, and widespread corporate greenwashing.</p>
+        </div>
+
+        <div class="quote-box" style="border-left-color: var(--seaweed-green);">
+          <p><strong>For Local Initiatives:</strong> Meanwhile, sustainability initiatives across Hawaiʻi struggle with digital visibility, marketing reach, and finding enough dedicated people to help drive their mission forward.</p>
+        </div>
       </div>
-      <p>Right now, up to 80 cents of every tourism dollar spent in Hawaii leaves the islands immediately. You want to support real families, but search engine results are dominated by giant corporations with huge ad budgets.</p>
     </div>
   </section>
 
@@ -520,8 +541,8 @@
         name: 'Kākoʻo ʻŌiwi: Traditional Taro Farm Restoration', 
         location: 'Heʻeia, Oʻahu',
         badge: 'Native-Led',
-        imgUrl: 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=800&q=80',
-        altText: 'Kākoʻo ʻŌiwi taro patch loʻi restoration in Heʻeia, Oʻahu'
+        imgUrl: 'taro_8439-scaled.jpg',
+        altText: 'Community volunteers in taro loʻi patch at Kākoʻo ʻŌiwi in Heʻeia, Oʻahu'
       },
       { 
         id: 'item-3', 
@@ -536,8 +557,8 @@
         name: 'Kāhili Beach Preserve', 
         location: 'Kīlauea, Kauaʻi',
         badge: 'Coastal Preservation',
-        imgUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
-        altText: 'Kāhili Beach Preserve in Kīlauea, Kauaʻi'
+        imgUrl: 'hawaiilandtrust-volunteer-at-kahili-beach-preserve-feature-community-1030x687.jpg',
+        altText: 'Volunteers working at Kāhili Beach Preserve in Kīlauea, Kauaʻi'
       }
     ];
 
@@ -598,7 +619,7 @@
         });
 
         updateSavedCount();
-        console.log("‘Oha Landing Page fully loaded with profile pictures.");
+        console.log("‘Oha Landing Page fully loaded.");
 
       } catch (err) {
         console.error("Error setting up directory cards:", err);
