@@ -14,6 +14,7 @@
       --white: #FFFFFF;
       --light-gray: #F9FAFB;
       --border-color: #E5E7EB;
+      --sunset-coral: #D97745;
     }
 
     * {
@@ -354,6 +355,71 @@
       font-weight: 600;
     }
 
+    /* AI TRIP HELPER */
+    .ai-helper {
+      background: var(--white);
+      border: 2px solid rgba(45, 90, 39, 0.18);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-top: 2rem;
+      box-shadow: 0 10px 24px rgba(5, 68, 94, 0.08);
+    }
+
+    .helper-controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    @media (min-width: 600px) {
+      .helper-controls {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .helper-field label {
+      display: block;
+      color: var(--deep-ocean);
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+
+    .helper-field select {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-dark);
+      background: var(--light-gray);
+      font: inherit;
+      padding: 0.75rem;
+    }
+
+    .ai-plan-output {
+      background: #FFF8E7;
+      border-left: 6px solid var(--sunset-coral);
+      border-radius: 0 10px 10px 0;
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .ai-plan-output h4 {
+      color: var(--deep-ocean);
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .ai-plan-output ul {
+      margin-left: 1.25rem;
+    }
+
+    .ai-note {
+      color: #4B5563;
+      font-size: 0.95rem;
+      margin-bottom: 0;
+    }
+
     /* SECTION 4: PROOF */
     .proof-section {
       background-color: var(--white);
@@ -472,6 +538,45 @@
         </div>
       </div>
 
+
+      <div class="ai-helper" aria-labelledby="ai-helper-heading">
+        <h3 id="ai-helper-heading">AI Trip Helper</h3>
+        <p>Answer three quick questions and get a locally minded starter plan you can refine before you travel.</p>
+        <div class="helper-controls">
+          <div class="helper-field">
+            <label for="island-select">Island</label>
+            <select id="island-select">
+              <option value="Oʻahu">Oʻahu</option>
+              <option value="Maui">Maui</option>
+              <option value="Kauaʻi">Kauaʻi</option>
+              <option value="Hawaiʻi Island">Hawaiʻi Island</option>
+            </select>
+          </div>
+          <div class="helper-field">
+            <label for="interest-select">Interest</label>
+            <select id="interest-select">
+              <option value="food systems">Food systems</option>
+              <option value="coastal restoration">Coastal restoration</option>
+              <option value="cultural learning">Cultural learning</option>
+              <option value="zero-waste shopping">Zero-waste shopping</option>
+            </select>
+          </div>
+          <div class="helper-field">
+            <label for="pace-select">Pace</label>
+            <select id="pace-select">
+              <option value="slow morning">Slow morning</option>
+              <option value="half-day">Half-day</option>
+              <option value="full-day">Full-day</option>
+            </select>
+          </div>
+        </div>
+        <button type="button" class="btn" id="generate-plan-button">Generate my starter plan</button>
+        <div class="ai-plan-output" id="ai-plan-output" aria-live="polite">
+          <h4>Your starter plan will appear here.</h4>
+          <p class="ai-note">Tip: save any directory cards above first, then use this plan as a conversation starter with local hosts and organizations.</p>
+        </div>
+      </div>
+
       <div class="price-box">
         <h3>Simple Pricing</h3>
         <div class="price-number">$0 / Free</div>
@@ -541,7 +646,7 @@
         name: 'Kākoʻo ʻŌiwi: Traditional Taro Farm Restoration', 
         location: 'Heʻeia, Oʻahu',
         badge: 'Native-Led',
-        imgUrl: 'taro_8439-scaled.jpg',
+        imgUrl: 'taro_8439-scaled.jpeg',
         altText: 'Community volunteers in taro loʻi patch at Kākoʻo ʻŌiwi in Heʻeia, Oʻahu'
       },
       { 
@@ -557,7 +662,7 @@
         name: 'Kāhili Beach Preserve', 
         location: 'Kīlauea, Kauaʻi',
         badge: 'Coastal Preservation',
-        imgUrl: 'hawaiilandtrust-volunteer-at-kahili-beach-preserve-feature-community-1030x687.jpg',
+        imgUrl: 'hawaiilandtrust-volunteer-at-kahili-beach-preserve-feature-community-1030x687.jpeg',
         altText: 'Volunteers working at Kāhili Beach Preserve in Kīlauea, Kauaʻi'
       }
     ];
@@ -576,6 +681,30 @@
 
         function updateSavedCount() {
           countSpan.textContent = savedPlan.length;
+        }
+
+        function generateStarterPlan() {
+          const island = document.getElementById("island-select").value;
+          const interest = document.getElementById("interest-select").value;
+          const pace = document.getElementById("pace-select").value;
+          const savedNames = sampleItems
+            .filter(item => savedPlan.includes(item.id))
+            .map(item => item.name);
+          const savedText = savedNames.length
+            ? `Start with your saved spot${savedNames.length > 1 ? 's' : ''}: ${savedNames.join(', ')}.`
+            : 'Start by choosing one verified card above that matches your route.';
+
+          document.getElementById("ai-plan-output").innerHTML = `
+            <h4>${pace.charAt(0).toUpperCase() + pace.slice(1)} ${interest} plan for ${island}</h4>
+            <ul>
+              <li>${savedText}</li>
+              <li>Message the host before visiting to confirm hours, volunteer needs, and respectful arrival instructions.</li>
+              <li>Bring a refillable bottle, reef-safe sun protection, and cash for direct local purchases or donations.</li>
+              <li>Close the loop by sharing what you learned and tagging the local organization, not just the destination.</li>
+            </ul>
+          `;
+
+          logState("Generated AI helper plan", { island, interest, pace, savedPlan });
         }
 
         sampleItems.forEach(item => {
@@ -617,6 +746,8 @@
             updateSavedCount();
           });
         });
+
+        document.getElementById("generate-plan-button").addEventListener("click", generateStarterPlan);
 
         updateSavedCount();
         console.log("‘Oha Landing Page fully loaded.");
