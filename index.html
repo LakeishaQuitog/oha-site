@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>‘Oha | Mindful Travel in Hawaii</title>
+  <title>‘Oha | Mindful Travel in Hawaiʻi</title>
   <style>
     /* CSS RESET & DESIGN TOKENS */
     :root {
@@ -193,39 +193,151 @@
       color: var(--white);
     }
 
-    /* DIRECTORY APP PROTOTYPE */
+    /* DIRECTORY CARD APP PROTOTYPE */
     .app-preview {
       background: var(--white);
       border: 2px solid var(--deep-ocean);
-      border-radius: 8px;
+      border-radius: 12px;
       padding: 1.5rem;
       margin-top: 2rem;
     }
 
-    .directory-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid var(--border-color);
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 1.25rem;
     }
 
-    .directory-item:last-child {
-      border-bottom: none;
+    @media (min-width: 600px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .checkbox-label {
+    .tour-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .tour-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .card-image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #05445E, #2D5A27);
+      overflow: hidden;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .tour-card:hover .card-img {
+      transform: scale(1.03);
+    }
+
+    .card-badge {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(5, 68, 94, 0.92);
+      color: var(--sand);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .card-checkbox-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 42px;
+      height: 42px;
+      background: var(--white);
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      justify-content: center;
       cursor: pointer;
-      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      transition: background-color 0.2s ease, transform 0.15s ease;
+      z-index: 2;
     }
 
-    .checkbox-label input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      accent-color: var(--seaweed-green);
+    .card-checkbox-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .card-checkbox-btn input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--deep-ocean);
+      border-radius: 6px;
+      cursor: pointer;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .card-checkbox-btn input[type="checkbox"]:checked {
+      background-color: var(--seaweed-green);
+      border-color: var(--seaweed-green);
+    }
+
+    .card-checkbox-btn input[type="checkbox"]:checked::after {
+      content: '✓';
+      color: var(--white);
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .tour-card-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+
+    .tour-card-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+
+    .tour-card-location {
+      font-size: 0.95rem;
+      color: #6B7280;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
     }
 
     /* SECTION 4: PROOF */
@@ -268,7 +380,6 @@
       color: var(--sand);
     }
 
-    /* SVG PLACEHOLDER GRAPHIC */
     .graphic-container {
       width: 100%;
       height: 180px;
@@ -317,7 +428,7 @@
         <div class="step-card">
           <div class="step-number">2</div>
           <h3>Build Your Plan</h3>
-          <p>Check the box on 10 initiatives or businesses you want to support during your stay.</p>
+          <p>Check the box on initiatives or businesses you want to support during your stay.</p>
         </div>
         <div class="step-card">
           <div class="step-number">3</div>
@@ -329,19 +440,21 @@
       <!-- INTERACTIVE DIRECTORY DEMO -->
       <div class="app-preview">
         <h3>Try It Now: Build Your Impact Plan</h3>
-        <p><small>Check items below to test adding them to your browser-saved plan.</small></p>
-        <div id="directory-container">
-          <!-- Populated by JavaScript -->
+        <p><small>Click the top-right checkbox on any card to save it to your browser plan.</small></p>
+        
+        <div class="cards-grid" id="directory-container">
+          <!-- Populated dynamically by JavaScript -->
         </div>
-        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border-color);">
-          <strong>Your Saved Plan Items: </strong><span id="saved-count">0</span>/10
+
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed var(--border-color); font-size: 1.1rem;">
+          <strong>Your Saved Plan Items: </strong><span id="saved-count" style="color: var(--seaweed-green); font-weight: 800;">0</span>
         </div>
       </div>
 
       <div class="price-box">
         <h3>Simple Pricing</h3>
         <div class="price-number">$0 / Free</div>
-        <p>Access the core Top 10 Impact Directory completely free of charge. No hidden fees or paywalls.</p>
+        <p>Access the core impact directory completely free of charge. No hidden fees or paywalls.</p>
       </div>
     </div>
   </section>
@@ -351,7 +464,6 @@
     <div class="container">
       <h2>Proof</h2>
       <div class="stat-badge">Real Field Research</div>
-      <!-- SVG Result Placeholder Graphic -->
       <div class="graphic-container">
         <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="#2D5A27" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
@@ -374,7 +486,7 @@
 
       <div class="faq-item">
         <h3>2. Will these recommendations actually work for my specific vacation area?</h3>
-        <p>Yes. The Top 10 Impact Directory includes verified choices across all major islands (Oʻahu, Maui, Kauaʻi, and Hawaiʻi Island), organized by category so you can easily fit them into your travel schedule.</p>
+        <p>Yes. The directory includes verified choices across all major islands (Oʻahu, Maui, Kauaʻi, and Hawaiʻi Island), organized by category so you can easily fit them into your travel schedule.</p>
       </div>
     </div>
   </section>
@@ -383,10 +495,9 @@
   <section class="cta-section">
     <div class="container">
       <h2>Ready to Make Your Trip Count?</h2>
-      <p>Get instant access to the full Hawaii Top 10 Impact Directory.</p>
+      <p>Get instant access to the full directory.</p>
       <br>
-      <!-- REPLACE THE href BELOW WITH YOUR LINK IN THE NEXT STEP -->
-      <a id="cta-button" href="https://example.com/signup" class="btn">Get The Top 10 List</a>
+      <a id="cta-button" href="https://forms.gle/y2eaPc9ptY1UDL37A" target="_blank" rel="noopener noreferrer" class="btn">Get involved</a>
     </div>
   </section>
 
@@ -394,26 +505,51 @@
   <script>
     console.log("‘Oha Landing Page script initializing...");
 
-    // Sample data for directory prototype
+    // Featured projects with specific photos representing each site
     const sampleItems = [
-      { id: 'item-1', name: 'Kākoʻo ʻŌiwi (Taro Farm Restoration)', location: 'Oʻahu' },
-      { id: 'item-2', name: 'Native Books Hawaii (Local Authors & Goods)', location: 'Honolulu' },
-      { id: 'item-3', name: 'Maui Nui Seabird Recovery Project', location: 'Maui' },
-      { id: 'item-4', name: 'Kumu Pono Farm Tour', location: 'Kauaʻi' }
+      { 
+        id: 'item-1', 
+        name: 'Kōkua Learning Farm', 
+        location: 'Haleʻiwa, Oʻahu',
+        badge: 'Verified Local',
+        imgUrl: '123KHF_KLF_TahneiRoy_Web_-850x650.jpeg',
+        altText: 'Volunteers planting crops at Kōkua Learning Farm in Haleʻiwa, Oʻahu'
+      },
+      { 
+        id: 'item-2', 
+        name: 'Kākoʻo ʻŌiwi: Traditional Taro Farm Restoration', 
+        location: 'Heʻeia, Oʻahu',
+        badge: 'Native-Led',
+        imgUrl: 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=800&q=80',
+        altText: 'Kākoʻo ʻŌiwi taro patch loʻi restoration in Heʻeia, Oʻahu'
+      },
+      { 
+        id: 'item-3', 
+        name: 'Waiheʻe Coastal Dunes & Wetland Refuge', 
+        location: 'Waiheʻe, Maui',
+        badge: 'Wildlife Protection',
+        imgUrl: 'images.jpg',
+        altText: 'Volunteers working at Waiheʻe Coastal Dunes & Wetland Refuge in Maui'
+      },
+      { 
+        id: 'item-4', 
+        name: 'Kāhili Beach Preserve', 
+        location: 'Kīlauea, Kauaʻi',
+        badge: 'Coastal Preservation',
+        imgUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
+        altText: 'Kāhili Beach Preserve in Kīlauea, Kauaʻi'
+      }
     ];
 
-    // Key points debugging log helper
     function logState(action, data) {
       console.log(`[‘Oha App State] ${action}:`, data);
     }
 
-    // Initialize the directory list on DOM Content Loaded
     document.addEventListener("DOMContentLoaded", () => {
       try {
         const container = document.getElementById("directory-container");
         const countSpan = document.getElementById("saved-count");
         
-        // Retrieve saved plan from localStorage or start empty
         let savedPlan = JSON.parse(localStorage.getItem("oha_impact_plan")) || [];
         logState("Loaded saved plan from browser", savedPlan);
 
@@ -421,24 +557,31 @@
           countSpan.textContent = savedPlan.length;
         }
 
-        // Render checklist elements
         sampleItems.forEach(item => {
-          const itemEl = document.createElement("div");
-          itemEl.className = "directory-item";
+          const card = document.createElement("div");
+          card.className = "tour-card";
           
           const isChecked = savedPlan.includes(item.id);
 
-          itemEl.innerHTML = `
-            <label class="checkbox-label" for="${item.id}">
-              <input type="checkbox" id="${item.id}" ${isChecked ? 'checked' : ''}>
-              <span>${item.name} <small>(${item.location})</small></span>
-            </label>
+          card.innerHTML = `
+            <div class="card-image-wrapper">
+              <img class="card-img" src="${item.imgUrl}" alt="${item.altText}" loading="lazy" onerror="this.style.opacity='0.1';">
+              <span class="card-badge">${item.badge}</span>
+              <label class="card-checkbox-btn" for="${item.id}" title="Save to Impact Plan">
+                <input type="checkbox" id="${item.id}" ${isChecked ? 'checked' : ''}>
+              </label>
+            </div>
+            <div class="tour-card-body">
+              <div class="tour-card-title">${item.name}</div>
+              <div class="tour-card-location">
+                <span>📍 ${item.location}</span>
+              </div>
+            </div>
           `;
 
-          container.appendChild(itemEl);
+          container.appendChild(card);
 
-          // Add toggle event listener
-          const checkbox = itemEl.querySelector("input");
+          const checkbox = card.querySelector("input[type='checkbox']");
           checkbox.addEventListener("change", (e) => {
             if (e.target.checked) {
               if (!savedPlan.includes(item.id)) {
@@ -448,7 +591,6 @@
               savedPlan = savedPlan.filter(id => id !== item.id);
             }
             
-            // Save to browser memory
             localStorage.setItem("oha_impact_plan", JSON.stringify(savedPlan));
             logState("Updated Plan", savedPlan);
             updateSavedCount();
@@ -456,10 +598,10 @@
         });
 
         updateSavedCount();
-        console.log("‘Oha Landing Page fully loaded and ready.");
+        console.log("‘Oha Landing Page fully loaded with profile pictures.");
 
       } catch (err) {
-        console.error("Error setting up directory checklist:", err);
+        console.error("Error setting up directory cards:", err);
       }
     });
   </script>
